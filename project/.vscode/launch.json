@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug application in Renode",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/renode-example.elf",
+      "miDebuggerPath": "arm-none-eabi-gdb",
+      "miDebuggerServerAddress": "localhost:3333",
+      "preLaunchTask": "Run Renode",
+      "postDebugTask": "Close Renode",
+      "args": [],
+      "stopAtEntry": true,
+      "externalConsole": false,
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb"
+    }
+  ]
+}
