@@ -1,0 +1,39 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug application in Renode",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/renode-example.elf",
+      "miDebuggerPath": "/home/simon/ToolChains/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gdb",
+      "miDebuggerServerAddress": "localhost:3333",
+      "MIMode": "gdb",
+      "preLaunchTask": "Run Renode",
+      "postDebugTask": "Close Renode",
+      "args": [],
+      "stopAtEntry": true,
+      "externalConsole": true,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "cwd": "/home/simon/projects/maskset-static/contentDrafts/renode/renode/project",
+      "program": "/home/simon/projects/maskset-static/contentDrafts/renode/renode/project/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
