@@ -62,5 +62,12 @@
     "memorymap.h": "c",
     "common.h": "c"
   },
-  "C_Cpp.autocomplete": "disabled"
+  "C_Cpp.autocomplete": "disabled",
+  "makefile.launchConfigurations": [
+    {
+      "cwd": "/home/simon/projects/maskset-static/contentDrafts/renode/maskset-examples/renode-docker/project",
+      "binaryPath": "/home/simon/projects/maskset-static/contentDrafts/renode/maskset-examples/renode-docker/project/renode-example.elf",
+      "binaryArgs": []
+    }
+  ]
 }

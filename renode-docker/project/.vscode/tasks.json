@@ -31,10 +31,10 @@
                 "-v",
                 "/tmp/.X11-unix:/tmp/.X11-unix",
                 "-v",
-                "${workspaceFolder}/..:/home/user",
+                "${workspaceFolder}:/home/user",
                 "--name", "renode",
                 "renode",
-                "renode",
+                "renode-1.15.3",
                 "--disable-gui",
                 "/home/user/renode-config.resc"
             ],
@@ -63,7 +63,7 @@
             "label": "Close Renode",
             "command": "docker",
             "args": [
-              "stop", "renode"
+              "stop", "renode-1.15.3"
             ],
             "type": "shell",
             "problemMatcher": []

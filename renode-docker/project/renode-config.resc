@@ -12,6 +12,12 @@ machine LoadPlatformDescription @add-ccm.repl
 # Create a terminal window showing the output of UART2
 showAnalyzer sysbus.usart2
 
+# serialConnect sysbus.usart2 "/tmp/uart"
+# CreateServerSocketTerminal 3456 "term"
+# CreateUartPtyTerminal "term" "/tmp/uart"
+
+# connector Connect sysbus.uart2 "term"
+
 # Enable GDB
 machine StartGdbServer 3333
 

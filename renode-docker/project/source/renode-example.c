@@ -79,13 +79,17 @@ int main(void) {
 
     printf("hello world!\n");
     bool button_is_pressed = false;
-
+    uint32_t i = 0;
     while (1) {
         if (!button_is_pressed && gpio_get(GPIOA, GPIO0)) {
             button_is_pressed = true;
         } else if (button_is_pressed && !gpio_get(GPIOA, GPIO0)) {
             printf("button pressed\n");
             button_is_pressed = false;
+        }
+        i++;
+        if(i % 100000 == 0) {
+            printf("%lu\n", i);
         }
     }
 
