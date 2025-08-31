@@ -1,26 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 project(nrf52_bootloader C ASM)
-
-# Set C standard
-set(CMAKE_C_STANDARD 23) # C11, C17, or C23, etc.
-set(CMAKE_C_STANDARD_REQUIRED ON) # Make it an error if compiler doesn’t support
-set(CMAKE_C_EXTENSIONS OFF) # Use strictly standard C (no GNU extensions)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# Cortex-M4 flags
-set(MCU_FLAGS
-    -mcpu=cortex-m4
-    -mthumb
-    -mfloat-abi=soft
-    # -mfpu=fpv4-sp-d16
-    -fno-exceptions # Turns off exceptions for languages that support it
-    -g3
-    -Os
-    # -fdebug-prefix-map=${ROOT_DIR}=.
-    -ffunction-sections
-    -fdata-sections
-    -Wall)
-# -Werror)
+set(LDSCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.ld")
 
 # Directories
 set(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
@@ -86,21 +66,40 @@ set(TINYCRYPT_SRC
 # Combined sources
 set(ALL_SRC ${BOOTLOADER_SRC} ${COMMON_SRC} ${MCUBOOT_SRC} ${TINYCRYPT_SRC})
 
+# Set C standard
+set(CMAKE_C_STANDARD 23) # C11, C17, or C23, etc.
+set(CMAKE_C_STANDARD_REQUIRED ON) # Make it an error if compiler doesn’t support
+set(CMAKE_C_EXTENSIONS OFF) # Use strictly standard C (no GNU extensions)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+#
 # Add executable
 add_executable(${PROJECT_NAME}.elf ${ALL_SRC})
+
+set(MCU_FLAGS
+    -mcpu=cortex-m4
+    -mthumb
+    -mfloat-abi=soft
+    # -mfpu=fpv4-sp-d16
+    -fno-exceptions # Turns off exceptions for languages that support it
+    -g3
+    -Os
+    # -fdebug-prefix-map=${ROOT_DIR}=.
+    -ffunction-sections
+    -fdata-sections
+    -Wall)
+# -Werror)
 
 # Compile flags
 target_compile_options(${PROJECT_NAME}.elf PRIVATE ${MCU_FLAGS})
 
 # Linker flags
-set(LDSCRIPT "${BOOTLOADER_DIR}/nrf52-bootloader.ld")
-
 target_link_options(
   ${PROJECT_NAME}.elf
   PRIVATE
   ${MCU_FLAGS}
   -T${LDSCRIPT}
-  -Wl,-Map=${BUILD_DIR}/nrf52-bootloader.map
+  -Wl,-Map=${BUILD_DIR}/${PROJECT_NAME}.map
   -Wl,-z
   -Wl,muldefs # Send keyword to linker: Allow multiple definitions
   -Wl,--no-export-dynamic # Also keeps CMake from adding rdynamic as a flag
