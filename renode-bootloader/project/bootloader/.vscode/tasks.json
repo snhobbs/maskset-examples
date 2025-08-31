@@ -27,6 +27,7 @@
                 "--rm",
                 "-p", "3333:3333",
                 "-p", "1234:1234",
+                "-p", "2345:2345",
                 "-e", "DISPLAY=$DISPLAY",
                 "-v",
                 "/tmp/.X11-unix:/tmp/.X11-unix",
@@ -64,7 +65,7 @@
             "label": "Close Renode",
             "command": "docker",
             "args": [
-              "stop", "renode-1.15.3"
+              "stop", "renode"
             ],
             "type": "shell",
             "problemMatcher": []

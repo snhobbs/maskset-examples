@@ -1,24 +1,33 @@
 cmake_minimum_required(VERSION 3.25)
 project(nrf52_bootloader C ASM)
 
+# Set C standard
+set(CMAKE_C_STANDARD 23) # C11, C17, or C23, etc.
+set(CMAKE_C_STANDARD_REQUIRED ON) # Make it an error if compiler doesn’t support
+set(CMAKE_C_EXTENSIONS OFF) # Use strictly standard C (no GNU extensions)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Cortex-M4 flags
 set(MCU_FLAGS
     -mcpu=cortex-m4
     -mthumb
+    -mfloat-abi=soft
+    # -mfpu=fpv4-sp-d16
+    -fno-exceptions # Turns off exceptions for languages that support it
     -g3
     -Os
-    -fdebug-prefix-map=${ROOT_DIR}=.
+    # -fdebug-prefix-map=${ROOT_DIR}=.
     -ffunction-sections
     -fdata-sections
-    -Wall
-    -Werror)
+    -Wall)
+# -Werror)
 
 # Directories
 set(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
-set(COMMON_DIR ${ROOT_DIR}/common)
 set(BOOTLOADER_DIR ${ROOT_DIR}/bootloader)
+set(COMMON_DIR ${ROOT_DIR}/common)
 set(EXTERNAL_DIR ${ROOT_DIR}/external)
-set(BUILD_DIR ${BOOTLOADER_DIR}/build)
+set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Include paths
 include_directories(
@@ -89,13 +98,33 @@ set(LDSCRIPT "${BOOTLOADER_DIR}/nrf52-bootloader.ld")
 target_link_options(
   ${PROJECT_NAME}.elf
   PRIVATE
+  ${MCU_FLAGS}
   -T${LDSCRIPT}
   -Wl,-Map=${BUILD_DIR}/nrf52-bootloader.map
+  -Wl,-z
+  -Wl,muldefs # Send keyword to linker: Allow multiple definitions
+  -Wl,--no-export-dynamic # Also keeps CMake from adding rdynamic as a flag
   -Wl,--gc-sections
-  --specs=nano.specs
-  -lc
-  -lgcc
-  -lc)
+  -Wl,--sort-section=alignment # Sort names by maximum alignment
+  -Wl,-print-memory-usage # Print size of link sections after compilation
+  -static # Prevents linking with shared libraries
+  # --specs=nano.specs -nostartfiles -nostdlib --specs=nosys.specs
+  # -nodefaultlibs                 # Need to have these -nostartfiles # Need to
+  # have these -nostdlib # Need to have these
+  -Wl,-lc
+  -Wl,-lgcc)
+
+target_link_libraries(
+  ${PROJECT_NAME}.elf
+  PRIVATE $<$<C_COMPILER_ID:GNU>:-Wl,--start-group>
+          $<$<C_COMPILER_ID:GNU>:m> # libm math library
+          $<$<C_COMPILER_ID:GNU>:c> # libc
+          $<$<C_COMPILER_ID:GNU>:gcc> # libgcc
+          $<$<C_COMPILER_ID:GNU>:nosys> # bare metal target
+          $<$<C_COMPILER_ID:GNU>:-Wl,--end-group>
+          $<$<C_COMPILER_ID:GNU>:--specs=nano.specs> # newlibnano library
+          $<$<C_COMPILER_ID:GNU>:--specs=nosys.specs> # nosemi hosting
+)
 
 target_compile_definitions(${PROJECT_NAME}.elf PRIVATE MCUBOOT_HAVE_LOG=0
                                                        CONFIG_MCUBOOT=0)

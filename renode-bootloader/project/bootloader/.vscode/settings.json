@@ -60,7 +60,18 @@
     "usart.h": "c",
     "rcc.h": "c",
     "memorymap.h": "c",
-    "common.h": "c"
+    "common.h": "c",
+    "uart.h": "c",
+    "stdio.h": "c",
+    "array": "c",
+    "string_view": "c",
+    "initializer_list": "c",
+    "stdarg.h": "c",
+    "string.h": "c",
+    "stddef.h": "c",
+    "logging.h": "c",
+    "types.h": "c",
+    "unistd.h": "c"
   },
   "C_Cpp.autocomplete": "disabled",
   "makefile.launchConfigurations": [

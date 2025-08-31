@@ -8,9 +8,10 @@
 
 #include "bootutil/bootutil.h"
 #include "bootutil/image.h"
-#include <sys/types.h>
-
+#include <reent.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 //! A very naive implementation of the newlib _sbrk dependency function
 caddr_t _sbrk(int incr);
@@ -61,6 +62,15 @@ static void do_boot(struct boot_rsp *rsp) {
   start_app(app_start, app_sp);
 }
 
+#include <reent.h>
+#include <stddef.h>
+
+_ssize_t _write_r(struct _reent *r, int file, const void *ptr, size_t len) {
+    (void)r;
+    (void)file;
+    return len;
+}
+
 int main(void) {
   prv_enable_vfp();
   uart_boot();
@@ -87,4 +97,5 @@ int main(void) {
   shell_processing_loop();
 
   __builtin_unreachable();
+  return 0;
 }

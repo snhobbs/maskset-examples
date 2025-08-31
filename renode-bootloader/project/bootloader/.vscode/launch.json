@@ -5,7 +5,7 @@
       "name": "Debug application in Renode",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/build/nrf52-bootloader.elf",
+      "program": "${workspaceFolder}/nrf52_bootloader.elf",
       "miDebuggerPath": "gdb-multiarch",
       "miDebuggerServerAddress": "localhost:3333",
       "MIMode": "gdb",
@@ -15,12 +15,6 @@
       "stopAtEntry": true,
       "externalConsole": false,
       "cwd": "${workspaceFolder}",
-      "setupCommands": [
-        {
-            "description": "Add source directory",
-            "text": "directory ${workspaceFolder}/..",
-            "ignoreFailures": false
-        },
     }
   ]
 }
