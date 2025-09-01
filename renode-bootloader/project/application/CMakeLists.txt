@@ -8,7 +8,7 @@ set(COMMON_DIR ${ROOT_DIR}/common)
 set(BOOTLOADER_DIR ${ROOT_DIR}/bootloader)
 set(APPLICATION_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(EXTERNAL_DIR ${ROOT_DIR}/external)
-set(BUILD_DIR ${APPLICATION_DIR}/build)
+set(BUILD_DIR ${APPLICATION_DIR})
 
 # Include paths
 include_directories(
@@ -55,7 +55,7 @@ set(MCU_FLAGS
     # -mfpu=fpv4-sp-d16
     -fno-exceptions # Turns off exceptions for languages that support it
     -g3
-    -Os
+    -O0
     # -fdebug-prefix-map=${ROOT_DIR}=.
     -ffunction-sections
     -fdata-sections
@@ -97,13 +97,12 @@ target_link_libraries(
           $<$<C_COMPILER_ID:GNU>:--specs=nosys.specs> # nosemi hosting
 )
 
-target_compile_definitions(${PROJECT_NAME}.elf PRIVATE MCUBOOT_HAVE_LOG=0
-                                                       CONFIG_MCUBOOT=0)
+target_compile_definitions(
+  ${PROJECT_NAME}.elf PRIVATE MCUBOOT_HAVE_LOG=0 CONFIG_MCUBOOT=0,
+                              IDN="Maskset,Application Example Slot 0,1,0.1.0")
 
 # Create build directory
 file(MAKE_DIRECTORY ${BUILD_DIR})
-target_compile_definitions(${PROJECT_NAME}.elf PRIVATE MCUBOOT_HAVE_LOG=0
-                                                       CONFIG_MCUBOOT=0)
 
 # Output directories
 set_target_properties(${PROJECT_NAME}.elf PROPERTIES RUNTIME_OUTPUT_DIRECTORY
@@ -111,30 +110,33 @@ set_target_properties(${PROJECT_NAME}.elf PROPERTIES RUNTIME_OUTPUT_DIRECTORY
 
 # Custom command to create binary
 add_custom_command(
-  OUTPUT ${BUILD_DIR}/${PROJECT_NAME}-no-header.bin
+  OUTPUT ${BUILD_DIR}/${PROJECT_NAME}.bin
   COMMAND ${CMAKE_OBJCOPY} -O binary ${BUILD_DIR}/${PROJECT_NAME}.elf
-          ${BUILD_DIR}/${PROJECT_NAME}-no-header.bin
+          ${BUILD_DIR}/${PROJECT_NAME}.bin
   DEPENDS ${PROJECT_NAME}.elf)
 
 # Custom command to sign MCUboot image
 set(IMGTOOL_PY ${ROOT_DIR}/external/mcuboot/scripts/imgtool.py)
 add_custom_command(
-  OUTPUT ${BUILD_DIR}/${PROJECT_NAME}.bin
+  OUTPUT ${BUILD_DIR}/${PROJECT_NAME}-signed.bin
   COMMAND
-    python3 ${IMGTOOL_PY} sign --header-size 0x200 --align 8 -S 131072 -v 1.0.0
-    --pad-header ${BUILD_DIR}/${PROJECT_NAME}-no-header.bin
-    ${BUILD_DIR}/${PROJECT_NAME}.bin
-  DEPENDS ${BUILD_DIR}/${PROJECT_NAME}-no-header.bin)
+    python3 ${IMGTOOL_PY} sign --header-size 0x200 --align 4 --slot-size 0x20000
+    -v 1.0.0 --pad-header ${BUILD_DIR}/${PROJECT_NAME}.bin
+    ${BUILD_DIR}/${PROJECT_NAME}-signed.bin
+  DEPENDS ${BUILD_DIR}/${PROJECT_NAME}.bin)
 
 # Add a pseudo-target for 'all'
-add_custom_target(all_images ALL DEPENDS ${BUILD_DIR}/${PROJECT_NAME}.bin)
+add_custom_target(all_images ALL
+                  DEPENDS ${BUILD_DIR}/${PROJECT_NAME}-signed.bin)
 
 # Optional: Flash command
 add_custom_target(
   flash
   COMMAND
-    arm-none-eabi-gdb-py --eval-command="target remote localhost:3333"
+    arm-none-eabi-gdb-py --eval-command="target remote localhost:2331"
     --ex="mon reset"
     --ex="restore ${BUILD_DIR}/${PROJECT_NAME}.bin binary 0x8000"
     --ex="mon reset" --se=${BUILD_DIR}/${PROJECT_NAME}.elf
-  DEPENDS all_images)
+  DEPENDS all_images
+  COMMENT "Flashing ${PROJECT_NAME} to the target via GDB"
+  VERBATIM)

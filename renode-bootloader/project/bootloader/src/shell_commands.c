@@ -39,7 +39,13 @@ static int prv_swap_images(int argc, char *argv[]) {
   return 0;
 }
 
+static int idn(int argc, char* argv[]) {
+  EXAMPLE_LOG("%s,%s,%s,%s", "Maskset", "Bootloader", "1", "0.1.0");
+  return 0;
+}
+
 static const sShellCommand s_shell_commands[] = {
+  {"*IDN?", idn, "Identity response"},
   {"swap_images", prv_swap_images, "Swap images"},
   {"reboot", prv_reboot_cli, "Reboot System"},
   {"help", shell_help_handler, "Lists all commands"},

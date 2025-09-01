@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.25)
+set(CMAKE_GENERATOR
+    "Ninja"
+    CACHE INTERNAL "" FORCE)
+
 project(nrf52-project C CXX ASM)
 
 set(CMAKE_SYSTEM_NAME Generic)

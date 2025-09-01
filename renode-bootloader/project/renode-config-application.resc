@@ -1,0 +1,31 @@
+:name: NRF52840 Application Loading
+:description: Bootloader project demo on NRF52840.
+
+using sysbus
+
+$name?="NRF52840"
+
+$bootloader_elf?=@bootloader/nrf52_bootloader.elf
+$application_0_bin?=@application/nrf52_application-signed.bin
+$application_1_bin?=@application/nrf52_application-signed-slot-1.bin
+$application_2_bin?=@application/nrf52_application-signed-slot-2.bin
+
+# Create Machine & Load config
+mach create $name
+machine LoadPlatformDescription @renode-platforms/boards/nrf52840dk_nrf52840.repl
+
+emulation CreateServerSocketTerminal 2345 "term"
+connector Connect sysbus.uart0 term
+
+# Enable GDB
+machine StartGdbServer 3333
+
+macro reset
+"""
+    sysbus LoadELF $bootloader_elf
+    sysbus LoadBinary $application_0_bin 0x8000
+    sysbus LoadBinary $application_1_bin 0x28000
+    sysbus LoadBinary $application_2_bin 0x48000
+"""
+
+runMacro $reset

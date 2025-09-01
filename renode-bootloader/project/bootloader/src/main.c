@@ -62,14 +62,6 @@ static void do_boot(struct boot_rsp *rsp) {
   start_app(app_start, app_sp);
 }
 
-#include <reent.h>
-#include <stddef.h>
-
-_ssize_t _write_r(struct _reent *r, int file, const void *ptr, size_t len) {
-    (void)r;
-    (void)file;
-    return len;
-}
 
 int main(void) {
   prv_enable_vfp();
