@@ -83,6 +83,7 @@ void example_internal_flash_read(uint32_t addr, void *buf, size_t length) {
   memcpy(buf, (void *)addr, length);
 }
 
+#define FLASH_SECTOR_SIZE 4096
 void example_internal_flash_erase_sector(uint32_t addr) {
   // Enable erase.
   NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Een;

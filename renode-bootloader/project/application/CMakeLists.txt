@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 project(nrf52_application C ASM)
 set(LDSCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.ld")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Directories
 set(ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
@@ -17,20 +18,20 @@ include_directories(
   ${EXTERNAL_DIR}/mcuboot/ext/tinycrypt/lib/include)
 
 # Source files
-set(APPLICATION_SRC
-    ${APPLICATION_DIR}/src/log_port.c
-    ${APPLICATION_DIR}/src/main.c
-    ${APPLICATION_DIR}/src/minimal_nrf52_uart.c
-    ${APPLICATION_DIR}/src/minimal_nrf52_flash.c
-    ${APPLICATION_DIR}/src/shell.c
-    ${APPLICATION_DIR}/src/shell_commands.c
-    ${APPLICATION_DIR}/src/shell_port.c
-    ${APPLICATION_DIR}/src/startup.c)
+set(APPLICATION_SRC ${APPLICATION_DIR}/src/main.c)
 
 set(MCUBOOT_SRC ${EXTERNAL_DIR}/mcuboot/boot/bootutil/src/bootutil_misc.c
                 ${EXTERNAL_DIR}/mcuboot/boot/bootutil/src/bootutil_public.c)
 
-set(COMMON_SRC ${COMMON_DIR}/src/mcuboot_port.c)
+set(COMMON_SRC
+    ${COMMON_DIR}/src/mcuboot_port.c
+    ${COMMON_DIR}/src/log_port.c
+    ${COMMON_DIR}/src/minimal_nrf52_uart.c
+    ${COMMON_DIR}/src/minimal_nrf52_flash.c
+    ${COMMON_DIR}/src/shell.c
+    ${COMMON_DIR}/src/shell_port.c
+    ${COMMON_DIR}/src/shell_commands.c
+    ${COMMON_DIR}/src/startup.c)
 
 set(ALL_SRC ${APPLICATION_SRC} ${MCUBOOT_SRC} ${COMMON_SRC})
 
@@ -97,9 +98,9 @@ target_link_libraries(
           $<$<C_COMPILER_ID:GNU>:--specs=nosys.specs> # nosemi hosting
 )
 
-target_compile_definitions(
-  ${PROJECT_NAME}.elf PRIVATE MCUBOOT_HAVE_LOG=0 CONFIG_MCUBOOT=0,
-                              IDN="Maskset,Application Example Slot 0,1,0.1.0")
+target_compile_definitions(${PROJECT_NAME}.elf PRIVATE MCUBOOT_HAVE_LOG=0
+                                                       CONFIG_MCUBOOT=0)
+# IDN="Maskset,Application Example Slot 0,1,0.1.0")
 
 # Create build directory
 file(MAKE_DIRECTORY ${BUILD_DIR})
@@ -121,8 +122,8 @@ add_custom_command(
   OUTPUT ${BUILD_DIR}/${PROJECT_NAME}-signed.bin
   COMMAND
     python3 ${IMGTOOL_PY} sign --header-size 0x200 --align 4 --slot-size 0x20000
-    -v 1.0.0 --pad-header ${BUILD_DIR}/${PROJECT_NAME}.bin
-    ${BUILD_DIR}/${PROJECT_NAME}-signed.bin
+    -v 1.0.0 --pad-header --erased-val 0xff --pad
+    ${BUILD_DIR}/${PROJECT_NAME}.bin ${BUILD_DIR}/${PROJECT_NAME}-signed.bin
   DEPENDS ${BUILD_DIR}/${PROJECT_NAME}.bin)
 
 # Add a pseudo-target for 'all'

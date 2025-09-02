@@ -3,6 +3,7 @@
 #include "cmsis_shim.h"
 #include "hal/logging.h"
 #include "hal/uart.h"
+#include <stdint.h>
 #include <sys/types.h>
 
 #include "bootutil/bootutil.h"
@@ -32,10 +33,14 @@ __attribute__((noinline)) static void prv_enable_vfp(void) {
   *cpacr |= 0xf << 20;
 }
 
+
+extern int cli_idn(int argc, char *argv[]);
+
 int main(void) {
   prv_enable_vfp();
   uart_boot();
 
+  cli_idn(0, NULL);
   // succesfully completed init, mark image as stable
   boot_set_confirmed();
 

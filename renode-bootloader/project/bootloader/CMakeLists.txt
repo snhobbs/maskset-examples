@@ -16,18 +16,18 @@ include_directories(
   ${EXTERNAL_DIR}/mcuboot/ext/tinycrypt/lib/include)
 
 # Bootloader sources
-set(BOOTLOADER_SRC
-    ${BOOTLOADER_DIR}/src/log_port.c
-    ${BOOTLOADER_DIR}/src/main.c
-    ${BOOTLOADER_DIR}/src/minimal_nrf52_uart.c
-    ${BOOTLOADER_DIR}/src/minimal_nrf52_flash.c
-    ${BOOTLOADER_DIR}/src/shell.c
-    ${BOOTLOADER_DIR}/src/shell_commands.c
-    ${BOOTLOADER_DIR}/src/shell_port.c
-    ${BOOTLOADER_DIR}/src/startup.c)
+set(BOOTLOADER_SRC ${BOOTLOADER_DIR}/src/main.c)
 
 # Common sources
-set(COMMON_SRC ${COMMON_DIR}/src/mcuboot_port.c)
+set(COMMON_SRC
+    ${COMMON_DIR}/src/mcuboot_port.c
+    ${COMMON_DIR}/src/log_port.c
+    ${COMMON_DIR}/src/minimal_nrf52_uart.c
+    ${COMMON_DIR}/src/minimal_nrf52_flash.c
+    ${COMMON_DIR}/src/shell.c
+    ${COMMON_DIR}/src/shell_port.c
+    ${COMMON_DIR}/src/shell_commands.c
+    ${COMMON_DIR}/src/startup.c)
 
 # MCUboot sources
 set(MCUBOOT_SRC
