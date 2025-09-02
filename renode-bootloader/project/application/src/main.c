@@ -33,7 +33,6 @@ __attribute__((noinline)) static void prv_enable_vfp(void) {
   *cpacr |= 0xf << 20;
 }
 
-
 extern int cli_idn(int argc, char *argv[]);
 
 int main(void) {
@@ -48,6 +47,7 @@ int main(void) {
     EXAMPLE_LOG("boot_set_confirmed() failed with error code %d", rc);
     // Optionally handle failure case (e.g., reset or retry)
   }
+  boot_set_confirmed();
 
   EXAMPLE_LOG("==Main Application Booted==");
 
