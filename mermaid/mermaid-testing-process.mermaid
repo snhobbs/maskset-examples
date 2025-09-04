@@ -1,0 +1,26 @@
+sequenceDiagram
+    autonumber
+    participant tja as The JigsApp
+    actor bd as Board Designer
+    Note right of bd: PCBA Design
+
+    bd->>tja: Orders Jig
+    activate tja
+
+    tja->>bd: Ships Jig Kit(s) (>14 days)
+    deactivate tja
+    destroy tja
+
+    activate bd
+    Note right of bd: Assemble Kit(s) (Approx. 30 minutes)
+    Note right of bd: Assemble & Verify Testing Electronics
+    deactivate bd
+
+    create actor cm as Contract Manufacturer
+
+    bd->>cm: Send Jig
+    activate cm
+    Note right of cm: Programming, end of line testing, & functional test
+    deactivate cm
+    destroy cm
+    cm->>bd: Tested & programmed boards
