@@ -1,0 +1,20 @@
+[manifest]
+path = app
+file = west.yml
+
+[zephyr]
+base = deps/zephyr
+
+[build]
+dir-fmt = build/{board}/{app}
+cmake-args = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_VERBOSE_MAKEFILE=ON"
+board = nrf52840dk/nrf52840
+generator = Ninja
+sysbuild = true
+
+[update]
+sync-submodules = true
+
+[log]
+verbosity=3  #  extreme
+
