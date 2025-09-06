@@ -7,8 +7,7 @@ $name?="NRF52840"
 
 $bootloader_elf?=@build/nrf52840dk/nrf52840/app/mcuboot/zephyr/zephyr.elf
 $application_elf?=@build/nrf52840dk/nrf52840/app/app/zephyr/zephyr.elf
-$application_1_bin?=@build/nrf52840dk/nrf52840/app/app/zephyr/zephyr.signed.bin
-$application_0_bin?=@zephyr.signed-102.bin
+$application_0_bin?=@build/nrf52840dk/nrf52840/app/app/zephyr/zephyr.signed.bin
 
 # Create Machine & Load config
 mach create $name
@@ -18,11 +17,8 @@ machine LoadPlatformDescription @renode-platforms/boards/nrf52840dk_nrf52840.rep
 machine LoadPlatformDescription @https://raw.githubusercontent.com/snhobbs/renode-nrf52840_flash/refs/heads/main/nrf52840_flash.repl
 
 emulation CreateServerSocketTerminal 2345 "term"
-emulation CreateServerSocketTerminal 2346 "term2"
 connector Connect sysbus.uart0 term
-connector Connect sysbus.uart1 term2
 showAnalyzer uart0
-# showAnalyzer uart1 
 
 # Enable GDB
 machine StartGdbServer 3333
@@ -31,8 +27,6 @@ macro load
 """
     sysbus LoadELF $bootloader_elf
     sysbus LoadBinary $application_0_bin 0xc000
-    #sysbus LoadELF $application_elf
-    #sysbus LoadBinary $application_1_bin 0x1a000
 """
 
 runMacro $load
