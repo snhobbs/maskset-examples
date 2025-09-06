@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#include <app_version.h>
 #include <zephyr/kernel.h>
 #include <zephyr/linker/linker-defs.h>
 
@@ -13,7 +14,7 @@ int main(void) {
 
   while (true) {
     k_sleep(K_MSEC(1000)); // sleep for 1 second
-    printk("delayed test\n");
+    printk("%s\n", APP_VERSION_STRING);
   }
   return 0;
 }

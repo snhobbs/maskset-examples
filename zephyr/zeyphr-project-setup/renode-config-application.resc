@@ -7,8 +7,8 @@ $name?="NRF52840"
 
 $bootloader_elf?=@build/nrf52840dk/nrf52840/app/mcuboot/zephyr/zephyr.elf
 $application_elf?=@build/nrf52840dk/nrf52840/app/app/zephyr/zephyr.elf
-$application_0_bin?=@build/nrf52840dk/nrf52840/app/app/zephyr/zephyr.signed.bin
 $application_1_bin?=@build/nrf52840dk/nrf52840/app/app/zephyr/zephyr.signed.bin
+$application_0_bin?=@zephyr.signed-102.bin
 
 # Create Machine & Load config
 mach create $name
@@ -22,7 +22,7 @@ emulation CreateServerSocketTerminal 2346 "term2"
 connector Connect sysbus.uart0 term
 connector Connect sysbus.uart1 term2
 showAnalyzer uart0
-showAnalyzer uart1 
+# showAnalyzer uart1 
 
 # Enable GDB
 machine StartGdbServer 3333
