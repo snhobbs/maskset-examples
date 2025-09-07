@@ -1,3 +1,9 @@
 [submodule "renode-bootloader/project/external/mcuboot"]
 	path = renode-bootloader/project/external/mcuboot
 	url = git@github.com:mcu-tools/mcuboot.git
+[submodule "scpi-demo/scpi-parser"]
+	path = scpi-demo/scpi-parser
+	url = git@github.com:snhobbs/scpi-parser
+[submodule "pi-tec-tuning/tec-pid-tuning"]
+	path = pi-tec-tuning/tec-pid-tuning
+	url = git@github.com:snhobbs/tec-pid-tuning
