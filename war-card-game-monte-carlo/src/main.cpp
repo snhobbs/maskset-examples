@@ -12,7 +12,8 @@ static std::random_device rd;
 std::mt19937 gen(rd());
 
 static inline void print_vector(std::vector<Results> &results) {
-  std::cout << "S1, S2, P1, P2, Tie, P1 War, P2 War\n";
+  std::cout << "S1, S2, P1, P2, Tie, P1 Turn Loss Average, P2 Turn Loss "
+               "Average, Hands, Games\n";
   for (auto &res : results) {
     std::cout << res << "\n";
   }

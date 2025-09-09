@@ -239,11 +239,14 @@ struct Results {
   uint32_t tie = 0;
   double average_p1_war_lost = 0;
   double average_p2_war_lost = 0;
+  uint64_t nhands = 0;
+  uint64_t ngames = 0;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Results &r) {
   os << r.s1 << ", " << r.s2 << ", " << r.p1 << ", " << r.p2 << ", " << r.tie
-     << ", " << r.average_p1_war_lost << ", " << r.average_p2_war_lost;
+     << ", " << r.average_p1_war_lost << ", " << r.average_p2_war_lost << ", "
+     << r.nhands << ", " << r.ngames;
   return os;
 }
 
@@ -401,11 +404,15 @@ inline Results simulate_strategy(Strategy s1, Strategy s2,
   uint64_t total_p2_war_cards = 0;
   size_t total_p2_war_count = 0;
 
+  result_struct.ngames = ngames;
+
   for (std::size_t i = 0; i < ngames; i++) {
     auto players = make_players(s1, s2);
     Player &p1 = (players.first);
     Player &p2 = (players.second);
     const auto game_result = simulate(p1, p2);
+
+    result_struct.nhands += game_result.nhands;
 
     for (auto c : game_result.war_hands_p1_lost) {
       total_p1_war_cards += c;
