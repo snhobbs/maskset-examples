@@ -4,7 +4,7 @@ manifest:
   projects:
     - name: zephyr
       url: https://github.com/zephyrproject-rtos/zephyr 
-      revision: v4.2.0
+      revision: main
       import:
         file: west.yml 
         path-prefix: deps 
@@ -15,6 +15,7 @@ manifest:
           - hal_nordic
           - mcuboot
           - zcbor
+          - mbedtls 
 
   self:
     path: app
