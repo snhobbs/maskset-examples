@@ -7,14 +7,19 @@
 		zephyr,bt-c2h-uart = &uart0;
 		zephyr,ieee802154 = &ieee802154;
 		zephyr,boot-mode = &boot_mode0;
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
 	};
 };
 
 /delete-node/ &qspi;
+/*
+/delete-node/ &boot_partition;
+/delete-node/ &slot0_partition;
+/delete-node/ &slot1_partition;
+/delete-node/ &storage_partition;
 
-&flash0 {
-    /delete-node/ partitions;
-};
 &flash0 {
 	partitions {
 		compatible = "fixed-partitions";
@@ -23,25 +28,26 @@
 
 		boot_partition: partition@0 {
 			label = "mcuboot";
-			reg = <0x00000000 0xc000>;
+			reg = <0x00000000 DT_SIZE_K(48)>;
 		};
 
 		slot0_partition: partition@c000 {
 			label = "image-0";
-			reg = <0x0000C000 0x40000>;
+			reg = <0x0000C000 DT_SIZE_K(220)>;
 		};
 
-		slot1_partition: partition@4c000 {
+		slot1_partition: partition@43000 {
 			label = "image-1";
-			reg = <0x0004C000 0x40000>;
+			reg = <0x00043000 DT_SIZE_K(220)>;
 		};
 
-		storage_partition: partition@8C000 {
+		storage_partition: partition@f8000 {
 			label = "storage";
-			reg = <0x0008C000 0x74000>;
+			reg = <0x000f8000 DT_SIZE_K(1024 - 220*2 + 48)>;
 		};
 	};
 };
+*/
 
 &pinctrl {
    uart1_default_alt: uart1_default_alt {

@@ -7,3 +7,6 @@
 [submodule "pi-tec-tuning/tec-pid-tuning"]
 	path = pi-tec-tuning/tec-pid-tuning
 	url = git@github.com:snhobbs/tec-pid-tuning
+[submodule "zephyr/zeyphr-project-setup/renode-platforms/renode-nrf52840_flash"]
+	path = zephyr/zephyr-project-setup/renode-platforms/renode-nrf52840_flash
+	url = git@github.com:snhobbs/renode-nrf52840_flash/
