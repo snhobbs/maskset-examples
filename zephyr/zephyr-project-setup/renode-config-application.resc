@@ -1,0 +1,42 @@
+:name: NRF52840 Application Loading
+:description: Bootloader project demo on NRF52840.
+
+using sysbus
+
+$name?="NRF52840"
+
+$bootloader_elf?=@build/nrf52840dk/nrf52840/app/mcuboot/zephyr/zephyr.elf
+$application_0_bin?=@build/nrf52840dk/nrf52840/app/app/zephyr/zephyr.signed.confirmed.bin
+$application_1_bin?=@build/nrf52840dk/nrf52840/app/app/zephyr/zephyr.signed.confirmed.bin
+
+$application_1_bin?=$application_0_bin
+
+# Create Machine & Load config
+mach create $name
+
+#include @https://raw.githubusercontent.com/snhobbs/renode-nrf52840_flash/refs/heads/main/nrf52840_nvcm.cs
+include @renode-platforms/renode-nrf52840_flash/nrf52840_nvcm.cs
+machine LoadPlatformDescription @renode-platforms/boards/nrf52840dk_nrf52840.repl
+#machine LoadPlatformDescription @https://raw.githubusercontent.com/snhobbs/renode-nrf52840_flash/refs/heads/main/nrf52840_flash.repl
+machine LoadPlatformDescription @renode-platforms/renode-nrf52840_flash/nrf52840_flash.repl
+
+emulation CreateServerSocketTerminal 2345 "term"
+connector Connect sysbus.uart0 term
+showAnalyzer uart0
+
+macro load
+"""
+    #sysbus LoadELF $application_elf
+    sysbus LoadELF $bootloader_elf
+    sysbus LoadBinary $application_0_bin 0xc000
+    sysbus LoadBinary $application_1_bin 0x82000 
+"""
+
+macro reset
+"""
+sysbus.uart0 Reset
+sysbus.uart1 Reset
+"""
+# Enable GDB
+machine StartGdbServer 3333
+runMacro $load

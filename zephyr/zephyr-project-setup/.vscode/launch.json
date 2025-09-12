@@ -1,0 +1,35 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug bootloader in Renode",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/nrf52840dk/nrf52840/app/mcuboot/zephyr/zephyr.elf",
+      "miDebuggerPath": "gdb-multiarch",
+      "miDebuggerServerAddress": "localhost:3333",
+      "MIMode": "gdb",
+      "preLaunchTask": "Run Bootloader Renode",
+      "postDebugTask": "Close Renode",
+      "args": [],
+      "stopAtEntry": true,
+      "externalConsole": false,
+      "cwd": "${workspaceFolder}",
+    },
+    {
+      "name": "Debug application in Renode",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/nrf52840dk/nrf52840/app/app/zephyr/zephyr.elf",
+      "miDebuggerPath": "gdb-multiarch",
+      "miDebuggerServerAddress": "localhost:3333",
+      "MIMode": "gdb",
+      "preLaunchTask": "Run Application Renode",
+      "postDebugTask": "Close Renode",
+      "args": [],
+      "stopAtEntry": true,
+      "externalConsole": false,
+      "cwd": "${workspaceFolder}",
+    }
+  ]
+}
