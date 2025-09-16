@@ -1,15 +1,3 @@
-# Bare Bones Zephyr Project Setup 
-+ Enables MCUBoot and builds both images
-+ Uses Manifest files and a west workspace
-+ app is based on zephyr's samples/sysbuild/with_mcuboot
+# Bare Bones Zephyr + Dual Image Bootloader
 
-
-```sh 
-python3 -m venv venv 
-source venv/bin/activate
-pip install west 
-cd app
-west init -l .
-west update
-west build --board nrf52840dk/nrf52840 --build-dir build --sysbuild -- -GNinja
-```
+See [the blog post](https://www.maskset.net/blog/2025/09/12/zephyr-and-mcuboot/).
