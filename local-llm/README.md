@@ -13,7 +13,7 @@
 ### Start Container & Server
 
 ```sh
-docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama3 ollama/ollama serve
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama serve
 ```
 
 Port 11434 is the ollama standard.
@@ -21,7 +21,7 @@ Port 11434 is the ollama standard.
 ### Test Server
 
 ```sh
-curl http://localhost:11435/api/generate -d '{
+curl http://localhost:11434/api/generate -d '{
   "model": "gemma3:1b",
   "prompt":"Why is the sky blue?"
 }'
