@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2023 Meta
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+
+///dts-v1/;
+
+/* Modify DMA node */
+&dma {
+    dma-channels = <2>;
+    status = "okay";
+};
+
+tst_dma0: &dma {};
+
+/* Override UART1 for Modbus RTU */
+&uart1 {
+    status = "okay";
+    current-speed = <115200>;
+    compatible = "zephyr,native-tty-uart";
+    serial-port = "/tmp/ttyModbus0";
+
+    modbus0: modbus0 {
+        compatible = "zephyr,modbus-serial";
+        status = "okay";
+		label = "MODBUS0";
+    };
+};
+
+/* Root node */
+ / {
+    chosen {
+        zephyr,modbus-uart = &uart1;
+    };
+};
+
+
